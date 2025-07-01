@@ -2,6 +2,8 @@ package com.BookNest.Service;
 
 import com.BookNest.Models.Review;
 import com.BookNest.Repository.ReviewRepository;
+import com.BookNest.utils.ApiResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -12,11 +14,13 @@ public class ReviewService {
     @Autowired
     private ReviewRepository reviewRepository;
 
-    public Review createReview(Review review) {
-        return reviewRepository.save(review);
+    public ApiResponse<Review> createReview(Review review) {
+        Review savedReview = reviewRepository.save(review);
+        return ApiResponse.created("Review created successfully", savedReview);
     }
 
-    public List<Review> getAllReviews() {
-        return reviewRepository.findAll();
+    public ApiResponse<List<Review>> getAllReviews() {
+        List<Review> reviews = reviewRepository.findAll();
+        return ApiResponse.success("Reviews retrieved successfully", reviews);
     }
 }

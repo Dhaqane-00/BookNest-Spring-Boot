@@ -1,6 +1,8 @@
 package com.BookNest.Service;
 
 import com.BookNest.Repository.UserRepository;
+import com.BookNest.utils.ApiResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import com.BookNest.Models.User;
@@ -12,26 +14,28 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public User loginUser(User user) {
+    public ApiResponse<User> loginUser(User user) {
         User existingUser = userRepository.findByUsername(user.getUsername());
         if (existingUser == null) {
-            throw new RuntimeException("User not found");
+            return ApiResponse.error("User not found", 404);
         }
         if (!existingUser.getPassword().equals(user.getPassword())) {
-            throw new RuntimeException("Invalid password");
+            return ApiResponse.error("Invalid password", 401);
         }
-        return existingUser;
+        return ApiResponse.success("User logged in successfully", existingUser);
     }
 
-    public User createUser(User user) {
+    public ApiResponse<User> createUser(User user) {
         User existingUser = userRepository.findByUsername(user.getUsername());
         if (existingUser != null) {
-            throw new RuntimeException("User already exists");
+            return ApiResponse.error("User already exists", 409);
         }
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+        return ApiResponse.created("User created successfully", savedUser);
     }
 
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public ApiResponse<List<User>> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return ApiResponse.success("Users retrieved successfully", users);
     }
 }

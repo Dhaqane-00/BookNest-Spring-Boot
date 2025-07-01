@@ -2,7 +2,10 @@ package com.BookNest.Controllers;
 
 import com.BookNest.Models.Review;
 import com.BookNest.Service.ReviewService;
+import com.BookNest.utils.ApiResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -14,12 +17,14 @@ public class ReviewController {
     private ReviewService reviewService;
 
     @PostMapping
-    public Review createReview(@RequestBody Review review) {
-        return reviewService.createReview(review);
+    public ResponseEntity<ApiResponse<Review>> createReview(@RequestBody Review review) {
+        ApiResponse<Review> response = reviewService.createReview(review);
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 
     @GetMapping
-    public List<Review> getAllReviews() {
-        return reviewService.getAllReviews();
+    public ResponseEntity<ApiResponse<List<Review>>> getAllReviews() {
+        ApiResponse<List<Review>> response = reviewService.getAllReviews();
+        return ResponseEntity.status(response.getStatusCode()).body(response);
     }
 }
