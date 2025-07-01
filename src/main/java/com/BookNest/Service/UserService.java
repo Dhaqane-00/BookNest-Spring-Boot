@@ -25,7 +25,7 @@ public class UserService {
     private JwtUtil jwtUtil;
 
     public ApiResponse<LoginResponse> loginUser(LoginRequest loginRequest) {
-        User existingUser = userRepository.findByUsername(loginRequest.getUsername());
+        User existingUser = userRepository.findByEmail(loginRequest.getEmail());
         if (existingUser == null) {
             return ApiResponse.error("User not found", 404);
         }
